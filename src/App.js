@@ -1,11 +1,62 @@
-import './App.css';
+import React from 'react';
+import Container from './components/Container';
+import Section from './components/Section';
+import FeedbackOptions from './components/FeedbackOptions';
+import Notification from './components/Notification';
+import Statistics from './components/Statistics';
 
-function App() {
-  return (
-    <div className="App">
-      <h2>Привет! Это настроенная версия приложения для работы с React</h2>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  };
+
+  onLeaveFeedback = event => {
+    // console.log(event)
+    this.setState(prevState => ({
+      [event.target.innerText]: prevState[event.target.innerText] + 1,
+    }));
+  };
+
+  countTotalFeedback = () => {
+    return this.state.good + this.state.neutral + this.state.bad;
+  };
+
+  countPositiveFeedbackPercentage = () => {
+    return (
+      Math.round((this.state.good / this.countTotalFeedback()) * 1000) / 10
+    );
+  };
+
+  render() {
+    const keys = Object.keys(this.state);
+
+    return (
+      <Container>
+        <Section title="Please leave feedback">
+          <FeedbackOptions
+            options={keys}
+            onLeaveFeedback={this.onLeaveFeedback}
+          ></FeedbackOptions>
+        </Section>
+
+        <Section title="Statistics">
+          {Number.isNaN(this.countPositiveFeedbackPercentage()) ? (
+            <Notification message="No feedback given"></Notification>
+          ) : (
+            <Statistics
+              good={this.state.good}
+              neutral={this.state.neutral}
+              bad={this.state.bad}
+              total={this.countTotalFeedback()}
+              positivePercentage={this.countPositiveFeedbackPercentage()}
+            ></Statistics>
+          )}
+        </Section>
+      </Container>
+    );
+  }
 }
 
 export default App;
