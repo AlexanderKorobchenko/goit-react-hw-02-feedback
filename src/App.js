@@ -12,10 +12,9 @@ class App extends React.Component {
     bad: 0,
   };
 
-  onLeaveFeedback = event => {
-    // console.log(event)
+  onLeaveFeedback = feedback => {
     this.setState(prevState => ({
-      [event.target.innerText]: prevState[event.target.innerText] + 1,
+      [feedback]: prevState[feedback] + 1,
     }));
   };
 
